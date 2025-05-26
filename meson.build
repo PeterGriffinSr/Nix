@@ -4,7 +4,7 @@ project('nix', ['c', 'cpp'],
   default_options: [
     'buildtype=debug',
     'warning_level=3',
-    'c_std=c99',
+    'c_std=c17',
     'cpp_std=c++17',
   ]
 )
@@ -13,7 +13,7 @@ cc = meson.get_compiler('c')
 
 warning_flags = []
 if cc.get_id() == 'msvc'
-  warning_flags += ['/W3', '/WX']
+  warning_flags += ['/WX']
 else
   warning_flags += [
     '-Wpedantic', '-Wshadow', '-Wundef', '-Wwrite-strings',
