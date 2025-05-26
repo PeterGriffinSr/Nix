@@ -4,12 +4,15 @@
     #include <string.h>
     #if defined(_WIN32) || defined(_WIN64)
         #include <windows.h>
+    #else
+        #include <unistd.h>
     #endif
     int yycolumn = 1;
     const char *filename;
 %}
 
 %option noinput nounput
+%option nounistd
 
 Digit           [0-9]
 Letter          [a-zA-Z_]
