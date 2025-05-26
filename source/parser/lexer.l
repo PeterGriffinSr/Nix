@@ -3,6 +3,7 @@
     #include <stdlib.h>
     #include <string.h>
     #if defined(_WIN32) || defined(_WIN64)
+        #define strdup _strdup
         #include <windows.h>
     #else
         #include <unistd.h>
@@ -76,7 +77,7 @@ StringLiteral   \"(\\.|[^\\"])*\"
 "False"         { yycolumn += yyleng; yylval.boolval = 0; return BoolLit; }
 
 {CharLiteral}   { yycolumn += yyleng; yylval.charval = yytext[1]; return CharLit; }
-{StringLiteral} { yycolumn += yyleng; yylval.strval = malloc((size_t)yyleng - 1); if (!yylval.strval) { fprintf(stderr, "Error: Memory allocation failed for string literal\n"); exit(EXIT_FAILURE); } strncpy(yylval.strval, yytext + 1, (size_t)yyleng - 2); yylval.strval[yyleng - 2] = '\0'; return StringLit; }
+{StringLiteral} { yycolumn += yyleng; size_t len = (size_t)yyleng - 2; yylval.strval = malloc(len + 1); if (!yylval.strval) { fprintf(stderr, "Error: Memory allocation failed for string literal\n"); exit(EXIT_FAILURE); } memcpy(yylval.strval, yytext + 1, len); yylval.strval[len] = '\0'; return StringLit; }
 {IntLiteral}    { yycolumn += yyleng; yylval.intval = atoi(yytext); return IntLit; }
 {FloatLiteral}  { yycolumn += yyleng; yylval.floatval = strtof(yytext, NULL); return FloatLit; }
 {Identifier}    { yycolumn += yyleng; yylval.strval = strdup(yytext); return Ident; }
