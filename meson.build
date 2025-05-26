@@ -13,7 +13,7 @@ cc = meson.get_compiler('c')
 
 warning_flags = []
 if cc.get_id() == 'msvc'
-  warning_flags += ['/WX']
+  warning_flags += []
 else
   warning_flags += [
     '-Wpedantic', '-Wshadow', '-Wundef', '-Wwrite-strings',

@@ -2,6 +2,9 @@
     #include "parser.h"
     #include <stdlib.h>
     #include <string.h>
+    #if defined(_WIN32) || defined(_WIN64)
+        #include <windows.h>
+    #endif
     int yycolumn = 1;
     const char *filename;
 %}
