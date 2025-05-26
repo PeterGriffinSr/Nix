@@ -4,9 +4,10 @@
     #include <string.h>
     #if defined(_WIN32) || defined(_WIN64)
         #include <io.h>
+        #include <windows.h>
         #define strdup _strdup
         #define fileno _fileno
-        #include <windows.h>
+        #define isatty _isatty
     #else
         #include <unistd.h>
     #endif
