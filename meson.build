@@ -17,7 +17,7 @@ else
   warning_flags += [
     '-Wpedantic', '-Wshadow', '-Wundef', '-Wwrite-strings',
     '-Wredundant-decls', '-Wmissing-declarations',
-    '-Wconversion', '-Wfatal-errors', '-Wvla',
+    '-Wconversion', '-Wvla',
     '-Wstrict-prototypes', '-D_XOPEN_SOURCE=700',
   ]
 endif

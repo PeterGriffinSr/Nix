@@ -23,11 +23,10 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential meson cmake
+          sudo apt-get install -y build-essential meson
           meson setup build
           meson compile -C build
           
-
       - name: Install dependencies and build (macOS)
         if: runner.os == 'macOS'
         run: |
@@ -41,6 +40,6 @@ jobs:
         run: |
           Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
           irm get.scoop.sh | iex
-          scoop install gcc meson python cmake
+          scoop install gcc meson python ninja pkg-config winflexbison
           meson setup build
           meson compile -C build
