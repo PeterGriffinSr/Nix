@@ -12,6 +12,8 @@ typedef enum {
   NodeBinary,
   NodeVarDecl,
   NodeTypeCall,
+  NodeFunction,
+  _NodeType,
 } NodeType;
 
 typedef struct ASTNode ASTNode;
@@ -43,6 +45,16 @@ struct ASTNode {
     ASTNode **args;
     int arg_count;
   } typeCall;
+  struct {
+    char *name;
+    struct ASTNode **params;
+    int param_count;
+    struct ASTNode *return_type;
+    struct ASTNode *body;
+  } functionCall;
+  struct {
+    char *type_name;
+  } _type;
 };
 
 ASTNode *create_block_node(void);
@@ -57,6 +69,11 @@ ASTNode *append_statements(ASTNode *block, ASTNode *stmts);
 ASTNode *create_binary_node(const char *op, ASTNode *left, ASTNode *right);
 ASTNode *create_type_call_node(const char *type_name, ASTNode **args,
                                int arg_count);
+ASTNode *create_function_node(char *name, ASTNode *param_list_node,
+                              ASTNode *return_type, ASTNode *body);
+ASTNode *create_type_node(const char *type_name);
+ASTNode *create_param_list_node(ASTNode **params, int count);
+ASTNode *append_param_list(ASTNode *existing, ASTNode *new_param);
 
 void freeAST(ASTNode *node);
 void printAST(ASTNode *node, int indent);

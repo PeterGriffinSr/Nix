@@ -104,6 +104,46 @@ ASTNode *create_type_call_node(const char *type_name, ASTNode **args,
   return node;
 }
 
+ASTNode *create_function_node(char *name, ASTNode *param_list_node,
+                              ASTNode *return_type, ASTNode *body) {
+  ASTNode *node = malloc(sizeof(ASTNode));
+  node->type = NodeFunction;
+  node->functionCall.name = strdup(name);
+  node->functionCall.param_count = param_list_node->functionCall.param_count;
+  node->functionCall.params = param_list_node->functionCall.params;
+  node->functionCall.return_type = return_type;
+  node->functionCall.body = body;
+  return node;
+}
+
+ASTNode *create_type_node(const char *type_name) {
+  ASTNode *node = malloc(sizeof(ASTNode));
+  node->type = _NodeType;
+  node->_type.type_name = strdup(type_name);
+  return node;
+}
+
+ASTNode *create_param_list_node(ASTNode **params, int count) {
+  ASTNode *node = malloc(sizeof(ASTNode));
+  node->type = NodeFunction;
+  node->functionCall.params = params;
+  node->functionCall.param_count = count;
+  return node;
+}
+
+ASTNode *append_param_list(ASTNode *existing, ASTNode *new_param) {
+  int old_count = existing->functionCall.param_count;
+  ASTNode **new_list = malloc(sizeof(ASTNode *) * ((size_t)old_count + 1));
+  for (int i = 0; i < old_count; i++) {
+    new_list[i] = existing->functionCall.params[i];
+  }
+  new_list[old_count] = new_param;
+  free(existing->functionCall.params);
+  existing->functionCall.params = new_list;
+  existing->functionCall.param_count += 1;
+  return existing;
+}
+
 void indent_print(int indent, const char *fmt, ...) {
   for (int i = 0; i < indent; i++) {
     printf("  ");
@@ -161,6 +201,20 @@ void printAST(ASTNode *node, int indent) {
       printAST(node->typeCall.args[i], indent + 1);
     }
     break;
+  case NodeFunction:
+    indent_print(indent, "Function: %s\n", node->functionCall.name);
+    indent_print(indent + 1, "Params:\n");
+    for (int i = 0; i < node->functionCall.param_count; ++i) {
+      printAST(node->functionCall.params[i], indent + 2);
+    }
+    indent_print(indent + 1, "Return Type:\n");
+    printAST(node->functionCall.return_type, indent + 2);
+    indent_print(indent + 1, "Body:\n");
+    printAST(node->functionCall.body, indent + 2);
+    break;
+  case _NodeType:
+    indent_print(indent, "Type: %s\n", node->_type.type_name);
+    break;
   default:
     indent_print(indent, "Unknown node type\n");
     break;
@@ -203,6 +257,18 @@ void freeAST(ASTNode *node) {
       freeAST(node->typeCall.args[i]);
     }
     free(node->typeCall.args);
+    break;
+  case NodeFunction:
+    free(node->functionCall.name);
+    for (int i = 0; i < node->functionCall.param_count; ++i) {
+      freeAST(node->functionCall.params[i]);
+    }
+    free(node->functionCall.params);
+    freeAST(node->functionCall.return_type);
+    freeAST(node->functionCall.body);
+    break;
+  case _NodeType:
+    free((char *)node->_type.type_name);
     break;
   default:
     fprintf(stderr, "Warning: Unknown node type in freeAST\n");
