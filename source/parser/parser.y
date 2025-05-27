@@ -47,7 +47,7 @@
 %token Val Mod Type Match With If Else None Some Ok Error Then
 %token Int Float Char String Bool
 
-%type <node> program statement statements primary_expr expr var_decl typed_param_list param type_expr function_decl
+%type <node> program statement statements primary_expr expr var_decl typed_param_list param type_expr function_decl mod_decl
 
 %%
 
@@ -64,6 +64,7 @@ statement:
     expr Semi { $$ = $1; }
     | var_decl Semi { $$ = $1; }
     | function_decl Semi { $$ = $1; }
+    | mod_decl Semi { $$ = $1; }
 ;
 
 expr:
@@ -79,6 +80,7 @@ expr:
   | expr GreaterEqual expr { $$ = create_binary_node(">=", $1, $3); }
   | expr LogicalAnd expr { $$ = create_binary_node("&&", $1, $3); }
   | expr LogicalOr expr { $$ = create_binary_node("||", $1, $3); }
+  | If expr Then expr Else expr { $$ = create_if_node($2, $4, $6); }
   | primary_expr { $$ = $1; }
 ;
 
@@ -101,7 +103,7 @@ var_decl:
 ;
 
 typed_param_list:
-    param { ASTNode **params = malloc(sizeof(ASTNode*));params[0] = $1;$$ = create_param_list_node(params, 1); }
+    param { ASTNode **params = malloc(sizeof(ASTNode*)); params[0] = $1;$$ = create_param_list_node(params, 1); }
   | typed_param_list Comma param { $$ = append_param_list($1, $3); }
 ;
 
@@ -123,4 +125,8 @@ type_expr:
 
 function_decl:
     Ident LParen typed_param_list RParen Colon type_expr Assignment expr { $$ = create_function_node($1, $3, $6, $8); }
+;
+
+mod_decl:
+    Mod Ident LBrace statements RBrace { $$ = create_mod_node($2, $4); }
 ;

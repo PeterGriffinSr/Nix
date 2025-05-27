@@ -147,6 +147,24 @@ ASTNode *append_param_list(ASTNode *existing, ASTNode *new_param) {
   return existing;
 }
 
+ASTNode *create_if_node(ASTNode *condition, ASTNode *then_branch,
+                        ASTNode *else_branch) {
+  ASTNode *node = malloc(sizeof(ASTNode));
+  node->type = NodeIf;
+  node->If.condition = condition;
+  node->If.then_branch = then_branch;
+  node->If.else_branch = else_branch;
+  return node;
+}
+
+ASTNode *create_mod_node(const char *name, ASTNode *body) {
+  ASTNode *node = malloc(sizeof(ASTNode));
+  node->type = NodeMod;
+  node->Mod.name = strdup(name);
+  node->Mod.body = body;
+  return node;
+}
+
 void indent_print(int indent, const char *fmt, ...) {
   for (int i = 0; i < indent; i++) {
     printf("  ");
@@ -218,6 +236,21 @@ void printAST(ASTNode *node, int indent) {
   case _NodeType:
     indent_print(indent, "Type: %s\n", node->_type.type_name);
     break;
+  case NodeIf:
+    indent_print(indent, "If:\n");
+    indent_print(indent + 1, "Condition:\n");
+    printAST(node->If.condition, indent + 2);
+    indent_print(indent + 1, "Then:\n");
+    printAST(node->If.then_branch, indent + 2);
+    if (node->If.else_branch) {
+      indent_print(indent + 1, "Else:\n");
+      printAST(node->If.else_branch, indent + 2);
+    }
+    break;
+  case NodeMod:
+    indent_print(indent, "Mod: %s\n", node->Mod.name);
+    printAST(node->Mod.body, indent + 1);
+    break;
   default:
     indent_print(indent, "Unknown node type\n");
     break;
@@ -272,6 +305,15 @@ void freeAST(ASTNode *node) {
     break;
   case _NodeType:
     free((char *)node->_type.type_name);
+    break;
+  case NodeIf:
+    freeAST(node->If.condition);
+    freeAST(node->If.then_branch);
+    freeAST(node->If.else_branch);
+    break;
+  case NodeMod:
+    free(node->Mod.name);
+    freeAST(node->Mod.body);
     break;
   default:
     fprintf(stderr, "Warning: Unknown node type in freeAST\n");
