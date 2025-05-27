@@ -4,8 +4,8 @@ project('nix', ['c', 'cpp'],
   default_options: [
     'buildtype=debug',
     'warning_level=3',
-    'c_std=c17',
-    'cpp_std=c++17',
+    'c_std=c99',
+    'cpp_std=c++99',
   ]
 )
 
