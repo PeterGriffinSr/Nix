@@ -1,3 +1,6 @@
+#if defined(_WIN32) || defined(_WIN64)
+  #define strdup _strdup 
+#endif 
 #include "ast.h"
 #include <stdarg.h>
 #include <stddef.h>
