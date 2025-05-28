@@ -16,6 +16,7 @@ typedef enum {
   _NodeType,
   NodeIf,
   NodeMod,
+  NodeUse,
 } NodeType;
 
 typedef struct ASTNode ASTNode;
@@ -66,6 +67,9 @@ struct ASTNode {
     char *name;
     ASTNode *body;
   } Mod;
+  struct {
+    char *module, *name;
+  } Use;
 };
 
 ASTNode *create_block_node(void);
@@ -85,8 +89,10 @@ ASTNode *create_function_node(char *name, ASTNode *param_list_node,
 ASTNode *create_type_node(const char *type_name);
 ASTNode *create_param_list_node(ASTNode **params, int count);
 ASTNode *append_param_list(ASTNode *existing, ASTNode *new_param);
-ASTNode *create_if_node(ASTNode *condition, ASTNode *then_branch, ASTNode *else_branch);
-ASTNode *create_mod_node(const char *name, ASTNode *body);
+ASTNode *create_if_node(ASTNode *condition, ASTNode *then_branch,
+                        ASTNode *else_branch);
+ASTNode *create_mod_node(char *name, ASTNode *body);
+ASTNode *create_use_node(char *module, char *name);
 
 void freeAST(ASTNode *node);
 void printAST(ASTNode *node, int indent);

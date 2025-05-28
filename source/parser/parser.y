@@ -44,10 +44,10 @@
 
 %token LParen RParen LBracket RBracket LBrace RBrace Plus Minus Star Slash Assignment Comma Dot Underscore Pipe Less Greater Colon Semi
 %token Equal NotEqual LessEqual GreaterEqual ThiccArrow SkinnyArrow LogicalAnd LogicalOr
-%token Val Mod Type Match With If Else None Some Ok Error Then
+%token Val Mod Type Match With If Else None Some Ok Error Then Use
 %token Int Float Char String Bool
 
-%type <node> program statement statements primary_expr expr var_decl typed_param_list param type_expr function_decl mod_decl
+%type <node> program statement statements primary_expr expr var_decl typed_param_list param type_expr function_decl mod_decl use_decl
 
 %%
 
@@ -65,6 +65,7 @@ statement:
     | var_decl Semi { $$ = $1; }
     | function_decl Semi { $$ = $1; }
     | mod_decl Semi { $$ = $1; }
+    | use_decl Semi { $$ = $1; }
 ;
 
 expr:
@@ -129,4 +130,8 @@ function_decl:
 
 mod_decl:
     Mod Ident LBrace statements RBrace { $$ = create_mod_node($2, $4); }
+;
+
+use_decl:
+    Use Ident Dot Ident { $$ = create_use_node($2, $4); }
 ;

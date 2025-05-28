@@ -126,6 +126,14 @@ ASTNode *create_type_node(const char *type_name) {
   return node;
 }
 
+ASTNode *create_use_node(char *module, char *name) {
+  ASTNode *node = malloc(sizeof(ASTNode));
+  node->type = NodeUse;
+  node->Use.module = strdup(module);
+  node->Use.name = strdup(name);
+  return node;
+}
+
 ASTNode *create_param_list_node(ASTNode **params, int count) {
   ASTNode *node = malloc(sizeof(ASTNode));
   node->type = NodeFunction;
@@ -157,7 +165,7 @@ ASTNode *create_if_node(ASTNode *condition, ASTNode *then_branch,
   return node;
 }
 
-ASTNode *create_mod_node(const char *name, ASTNode *body) {
+ASTNode *create_mod_node(char *name, ASTNode *body) {
   ASTNode *node = malloc(sizeof(ASTNode));
   node->type = NodeMod;
   node->Mod.name = strdup(name);
@@ -251,6 +259,10 @@ void printAST(ASTNode *node, int indent) {
     indent_print(indent, "Mod: %s\n", node->Mod.name);
     printAST(node->Mod.body, indent + 1);
     break;
+  case NodeUse:
+    indent_print(indent, "Use: %s\n", node->Use.module);
+    indent_print(indent + 1, "Name: %s\n", node->Use.name);
+    break;
   default:
     indent_print(indent, "Unknown node type\n");
     break;
@@ -312,8 +324,9 @@ void freeAST(ASTNode *node) {
     freeAST(node->If.else_branch);
     break;
   case NodeMod:
-    free(node->Mod.name);
     freeAST(node->Mod.body);
+    break;
+  case NodeUse:
     break;
   default:
     fprintf(stderr, "Warning: Unknown node type in freeAST\n");

@@ -72,12 +72,10 @@ bool handleCliOption(const char *arg) {
   if (strcmp(arg, "--version") == 0 || strcmp(arg, "-v") == 0) {
     printVersion();
     return true;
-  }
-  if (strcmp(arg, "--help") == 0 || strcmp(arg, "-h") == 0) {
+  } else if (strcmp(arg, "--help") == 0 || strcmp(arg, "-h") == 0) {
     printHelpMenu();
     return true;
-  }
-  if (strncmp(arg, "--help=", 7) == 0) {
+  } else if (strncmp(arg, "--help=", 7) == 0) {
     const char *topic = arg + 7;
     if (strcmp(topic, "warnings") == 0) {
       printWarningsHelp();

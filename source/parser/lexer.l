@@ -61,6 +61,7 @@ StringLiteral   \"(\\.|[^\\"])*\"
 
 "val"           { yycolumn += yyleng; return Val; }
 "mod"           { yycolumn += yyleng; return Mod; }
+"use"           { yycolumn += yyleng; return Use; }
 "type"          { yycolumn += yyleng; return Type; }
 "match"         { yycolumn += yyleng; return Match; }
 "with"          { yycolumn += yyleng; return With; }
