@@ -4,22 +4,31 @@ project('nix', ['c', 'cpp'],
   default_options: [
     'buildtype=debug',
     'warning_level=3',
-    'c_std=c99'
+    'c_std=c99',
   ]
 )
 
 cc = meson.get_compiler('c')
 
 warning_flags = []
+common_flags = ['-D_XOPEN_SOURCE=700']
+
 if cc.get_id() == 'msvc'
-  warning_flags += []
-else
+  warning_flags += [
+    '/permissive-',
+    '/D_CRT_SECURE_NO_WARNINGS',
+  ]
+elif cc.get_id() == 'clang'
+  warning_flags += [
+    '-Wpedantic', '-Wshadow', '-Wundef', '-Wwrite-strings',
+    '-Wconversion', '-Wvla', '-Wstrict-prototypes',
+  ] + common_flags
+elif cc.get_id() == 'gcc'
   warning_flags += [
     '-Wpedantic', '-Wshadow', '-Wundef', '-Wwrite-strings',
     '-Wredundant-decls', '-Wmissing-declarations',
-    '-Wconversion', '-Wvla',
-    '-Wstrict-prototypes', '-D_XOPEN_SOURCE=700',
-  ]
+    '-Wconversion', '-Wvla', '-Wstrict-prototypes',
+  ] + common_flags
 endif
 
 add_project_arguments(warning_flags, language: 'c')
