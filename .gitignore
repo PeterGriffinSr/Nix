@@ -1,23 +1,5 @@
-# == System-generated files ==
-Thumbs.db
-.DS_Store
+.gitattributes
 
-# == Editor & IDE files ==
-*~
-*#
-*.swp
-#*#
+*.o
 
-# == Build artifacts ==
-!*.c
-!*.h
-!*.md
-!*.y
-!*.l
-!*/
-
-# === Build system caches ===
-.cache/
-.deps/
-.vscode/
-build/
+nix

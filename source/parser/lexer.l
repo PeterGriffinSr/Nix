@@ -2,6 +2,7 @@
     #include "parser.h"
     #include <stdlib.h>
     #include <string.h>
+
     #if defined(_WIN32) || defined(_WIN64)
         #include <io.h>
         #include <windows.h>
@@ -10,7 +11,9 @@
         #define isatty _isatty
     #else
         #include <unistd.h>
+        #define _POSIX_C_SOURCE 200809L
     #endif
+
     int yycolumn = 1;
     const char *filename;
 %}
@@ -81,7 +84,7 @@ StringLiteral   \"(\\.|[^\\"])*\"
 "False"         { yycolumn += yyleng; yylval.boolval = 0; return BoolLit; }
 
 {CharLiteral}   { yycolumn += yyleng; yylval.charval = yytext[1]; return CharLit; }
-{StringLiteral} { yycolumn += yyleng; size_t len = (size_t)yyleng - 2; yylval.strval = malloc(len + 1); if (!yylval.strval) { fprintf(stderr, "Error: Memory allocation failed for string literal\n"); exit(EXIT_FAILURE); } memcpy(yylval.strval, yytext + 1, len); yylval.strval[len] = '\0'; return StringLit; }
+{StringLiteral} { size_t len; yycolumn += yyleng; len = (size_t)yyleng - 2; yylval.strval = (char *)malloc(len + 1); if (!yylval.strval) { fprintf(stderr, "Error: Memory allocation failed for string literal\n"); exit(EXIT_FAILURE); } memcpy(yylval.strval, yytext + 1, len); yylval.strval[len] = '\0'; return StringLit; }
 {IntLiteral}    { yycolumn += yyleng; yylval.intval = atoi(yytext); return IntLit; }
 {FloatLiteral}  { yycolumn += yyleng; yylval.floatval = strtof(yytext, NULL); return FloatLit; }
 {Identifier}    { yycolumn += yyleng; yylval.strval = strdup(yytext); return Ident; }

@@ -15,6 +15,8 @@ extern const char *filename;
 extern void yylex_destroy(void);
 
 int main(int argc, char *argv[]) {
+  FILE *file;
+
   if (argc < 2) {
     fputs("nix: error: no input file\n", stderr);
     return EXIT_FAILURE;
@@ -27,7 +29,7 @@ int main(int argc, char *argv[]) {
   }
 
   filename = argv[1];
-  FILE *file = fopen(filename, "r");
+  file = fopen(filename, "r");
   if (!file) {
     fprintf(stderr, "nix: error: could not read file '%s'\n", filename);
     return EXIT_FAILURE;

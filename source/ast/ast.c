@@ -9,54 +9,54 @@
 #include <string.h>
 
 ASTNode *create_int_node(int value) {
-  ASTNode *node = malloc(sizeof(ASTNode));
+  ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeIntLiteral;
   node->u.intval = value;
   return node;
 }
 
 ASTNode *create_float_node(double value) {
-  ASTNode *node = malloc(sizeof(ASTNode));
+  ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeFloatLiteral;
   node->u.floatval = value;
   return node;
 }
 
 ASTNode *create_char_node(char value) {
-  ASTNode *node = malloc(sizeof(ASTNode));
+  ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeCharLiteral;
   node->u.charval = value;
   return node;
 }
 
 ASTNode *create_string_node(char *value) {
-  ASTNode *node = malloc(sizeof(ASTNode));
+  ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeStringLiteral;
   node->u.strval = value;
   return node;
 }
 
 ASTNode *create_bool_node(int value) {
-  ASTNode *node = malloc(sizeof(ASTNode));
+  ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeBoolLiteral;
   node->u.boolval = value;
   return node;
 }
 
 ASTNode *create_identifier_node(char *value) {
-  ASTNode *node = malloc(sizeof(ASTNode));
+  ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeIdent;
   node->u.strval = value;
   return node;
 }
 
 ASTNode *create_block_node(void) {
-  ASTNode *node = malloc(sizeof(ASTNode));
+  ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeBlock;
   node->blockStmt.count = 0;
   node->blockStmt.cap = 4;
   node->blockStmt.statements =
-      malloc(sizeof(ASTNode *) * (size_t)node->blockStmt.cap);
+      (ASTNode **)malloc(sizeof(ASTNode *) * (size_t)node->blockStmt.cap);
   return node;
 }
 
@@ -72,7 +72,7 @@ ASTNode *append_statements(ASTNode *block, ASTNode *stmt) {
   if (block->blockStmt.count >= block->blockStmt.cap) {
     block->blockStmt.cap *= 2;
     block->blockStmt.statements =
-        realloc(block->blockStmt.statements,
+        (ASTNode **)realloc(block->blockStmt.statements,
                 sizeof(ASTNode *) * (size_t)block->blockStmt.cap);
   }
 
@@ -81,7 +81,7 @@ ASTNode *append_statements(ASTNode *block, ASTNode *stmt) {
 }
 
 ASTNode *create_binary_node(const char *op, ASTNode *left, ASTNode *right) {
-  ASTNode *node = malloc(sizeof(ASTNode));
+  ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeBinary;
   node->binaryExpr.op = op;
   node->binaryExpr.left = left;
@@ -90,7 +90,7 @@ ASTNode *create_binary_node(const char *op, ASTNode *left, ASTNode *right) {
 }
 
 ASTNode *create_var_node(char *name, ASTNode *value) {
-  ASTNode *node = malloc(sizeof(ASTNode));
+  ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeVarDecl;
   node->varDecl.name = name;
   node->varDecl.value = value;
@@ -99,7 +99,7 @@ ASTNode *create_var_node(char *name, ASTNode *value) {
 
 ASTNode *create_type_call_node(const char *type_name, ASTNode **args,
                                int arg_count) {
-  ASTNode *node = malloc(sizeof(ASTNode));
+  ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeTypeCall;
   node->typeCall.type_name = type_name;
   node->typeCall.args = args;
@@ -109,7 +109,7 @@ ASTNode *create_type_call_node(const char *type_name, ASTNode **args,
 
 ASTNode *create_function_node(char *name, ASTNode *param_list_node,
                               ASTNode *return_type, ASTNode *body) {
-  ASTNode *node = malloc(sizeof(ASTNode));
+  ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeFunction;
   node->functionCall.name = strdup(name);
   node->functionCall.param_count = param_list_node->functionCall.param_count;
@@ -120,14 +120,14 @@ ASTNode *create_function_node(char *name, ASTNode *param_list_node,
 }
 
 ASTNode *create_type_node(const char *type_name) {
-  ASTNode *node = malloc(sizeof(ASTNode));
+  ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = _NodeType;
   node->_type.type_name = strdup(type_name);
   return node;
 }
 
 ASTNode *create_use_node(char *module, char *name) {
-  ASTNode *node = malloc(sizeof(ASTNode));
+  ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeUse;
   node->Use.module = strdup(module);
   node->Use.name = strdup(name);
@@ -135,7 +135,7 @@ ASTNode *create_use_node(char *module, char *name) {
 }
 
 ASTNode *create_param_list_node(ASTNode **params, int count) {
-  ASTNode *node = malloc(sizeof(ASTNode));
+  ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeFunction;
   node->functionCall.params = params;
   node->functionCall.param_count = count;
@@ -144,7 +144,7 @@ ASTNode *create_param_list_node(ASTNode **params, int count) {
 
 ASTNode *append_param_list(ASTNode *existing, ASTNode *new_param) {
   int old_count = existing->functionCall.param_count;
-  ASTNode **new_list = malloc(sizeof(ASTNode *) * ((size_t)old_count + 1));
+  ASTNode **new_list = (ASTNode **)malloc(sizeof(ASTNode *) * ((size_t)old_count + 1));
   for (int i = 0; i < old_count; i++) {
     new_list[i] = existing->functionCall.params[i];
   }
@@ -157,7 +157,7 @@ ASTNode *append_param_list(ASTNode *existing, ASTNode *new_param) {
 
 ASTNode *create_if_node(ASTNode *condition, ASTNode *then_branch,
                         ASTNode *else_branch) {
-  ASTNode *node = malloc(sizeof(ASTNode));
+  ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeIf;
   node->If.condition = condition;
   node->If.then_branch = then_branch;
@@ -166,7 +166,7 @@ ASTNode *create_if_node(ASTNode *condition, ASTNode *then_branch,
 }
 
 ASTNode *create_mod_node(char *name, ASTNode *body) {
-  ASTNode *node = malloc(sizeof(ASTNode));
+  ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeMod;
   node->Mod.name = strdup(name);
   node->Mod.body = body;
@@ -174,11 +174,11 @@ ASTNode *create_mod_node(char *name, ASTNode *body) {
 }
 
 void indent_print(int indent, const char *fmt, ...) {
+  va_list args;
   for (int i = 0; i < indent; i++) {
     printf("  ");
   }
 
-  va_list args;
   va_start(args, fmt);
   vprintf(fmt, args);
   va_end(args);

@@ -92,11 +92,11 @@ primary_expr:
   | StringLit   { $$ = create_string_node($1); }
   | BoolLit     { $$ = create_bool_node($1); }
   | Ident       { $$ = create_identifier_node($1); }
-  | Int LParen expr RParen { ASTNode **args = malloc(sizeof(ASTNode*)); args[0] = $3; $$ = create_type_call_node("Int", args, 1); }
-  | Float LParen expr RParen { ASTNode **args = malloc(sizeof(ASTNode*)); args[0] = $3; $$ = create_type_call_node("Float", args, 1); }
-  | Bool LParen expr RParen { ASTNode **args = malloc(sizeof(ASTNode*)); args[0] = $3; $$ = create_type_call_node("Bool", args, 1); }
-  | Char LParen expr RParen { ASTNode **args = malloc(sizeof(ASTNode*)); args[0] = $3; $$ = create_type_call_node("Char", args, 1); }
-  | String LParen expr RParen { ASTNode **args = malloc(sizeof(ASTNode*)); args[0] = $3; $$ = create_type_call_node("String", args, 1); }
+  | Int LParen expr RParen { ASTNode **args = (ASTNode **)malloc(sizeof(ASTNode*)); args[0] = $3; $$ = create_type_call_node("Int", args, 1); }
+  | Float LParen expr RParen { ASTNode **args = (ASTNode **)malloc(sizeof(ASTNode*)); args[0] = $3; $$ = create_type_call_node("Float", args, 1); }
+  | Bool LParen expr RParen { ASTNode **args = (ASTNode **)malloc(sizeof(ASTNode*)); args[0] = $3; $$ = create_type_call_node("Bool", args, 1); }
+  | Char LParen expr RParen { ASTNode **args = (ASTNode **)malloc(sizeof(ASTNode*)); args[0] = $3; $$ = create_type_call_node("Char", args, 1); }
+  | String LParen expr RParen { ASTNode **args = (ASTNode **)malloc(sizeof(ASTNode*)); args[0] = $3; $$ = create_type_call_node("String", args, 1); }
 ;
 
 var_decl:
@@ -104,16 +104,16 @@ var_decl:
 ;
 
 typed_param_list:
-    param { ASTNode **params = malloc(sizeof(ASTNode*)); params[0] = $1;$$ = create_param_list_node(params, 1); }
+    param { ASTNode **params = (ASTNode **)malloc(sizeof(ASTNode*)); params[0] = $1;$$ = create_param_list_node(params, 1); }
   | typed_param_list Comma param { $$ = append_param_list($1, $3); }
 ;
 
 param:
-    Int LParen Ident RParen { ASTNode *arg = create_identifier_node($3); ASTNode **args = malloc(sizeof(ASTNode*)); args[0] = arg; $$ = create_type_call_node("Int", args, 1); }
-  | Float LParen Ident RParen { ASTNode *arg = create_identifier_node($3); ASTNode **args = malloc(sizeof(ASTNode*)); args[0] = arg; $$ = create_type_call_node("Float", args, 1); }
-  | Bool LParen Ident RParen { ASTNode *arg = create_identifier_node($3); ASTNode **args = malloc(sizeof(ASTNode*)); args[0] = arg; $$ = create_type_call_node("Bool", args, 1); }
-  | Char LParen Ident RParen { ASTNode *arg = create_identifier_node($3); ASTNode **args = malloc(sizeof(ASTNode*)); args[0] = arg; $$ = create_type_call_node("Char", args, 1); }
-  | String LParen Ident RParen { ASTNode *arg = create_identifier_node($3); ASTNode **args = malloc(sizeof(ASTNode*)); args[0] = arg; $$ = create_type_call_node("String", args, 1); }
+    Int LParen Ident RParen { ASTNode *arg = create_identifier_node($3); ASTNode **args = (ASTNode **)malloc(sizeof(ASTNode*)); args[0] = arg; $$ = create_type_call_node("Int", args, 1); }
+  | Float LParen Ident RParen { ASTNode *arg = create_identifier_node($3); ASTNode **args = (ASTNode **)malloc(sizeof(ASTNode*)); args[0] = arg; $$ = create_type_call_node("Float", args, 1); }
+  | Bool LParen Ident RParen { ASTNode *arg = create_identifier_node($3); ASTNode **args = (ASTNode **)malloc(sizeof(ASTNode*)); args[0] = arg; $$ = create_type_call_node("Bool", args, 1); }
+  | Char LParen Ident RParen { ASTNode *arg = create_identifier_node($3); ASTNode **args = (ASTNode **)malloc(sizeof(ASTNode*)); args[0] = arg; $$ = create_type_call_node("Char", args, 1); }
+  | String LParen Ident RParen { ASTNode *arg = create_identifier_node($3); ASTNode **args = (ASTNode **)malloc(sizeof(ASTNode*)); args[0] = arg; $$ = create_type_call_node("String", args, 1); }
 ;
 
 type_expr:
