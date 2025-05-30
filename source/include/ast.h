@@ -16,7 +16,7 @@ typedef enum {
   _NodeType,
   NodeIf,
   NodeMod,
-  NodeUse,
+  NodeUse
 } NodeType;
 
 typedef struct ASTNode ASTNode;

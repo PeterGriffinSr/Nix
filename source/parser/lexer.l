@@ -11,7 +11,6 @@
         #define isatty _isatty
     #else
         #include <unistd.h>
-        #define _POSIX_C_SOURCE 200809L
     #endif
 
     int yycolumn = 1;

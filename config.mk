@@ -11,8 +11,8 @@ WARNINGS = \
 	-Wmissing-prototypes -Wnested-externs -Wc++-compat \
 	-Wold-style-definition -Wlogical-op
 
-CFLAGS = -O2 $(CSTD) $(WARNINGS) -fno-stack-protector -fno-common -march=native -D_POSIX_C_SOURCE=200809L
-LDFLAGS = -Wl,-E
+CFLAGS = -O2 $(CSTD) $(WARNINGS) -fno-stack-protector -fno-common -march=native
+LDFLAGS = 
 
 SRC_DIR = source
 INCLUDE_DIR = $(SRC_DIR)/include

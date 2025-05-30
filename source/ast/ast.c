@@ -73,7 +73,7 @@ ASTNode *append_statements(ASTNode *block, ASTNode *stmt) {
     block->blockStmt.cap *= 2;
     block->blockStmt.statements =
         (ASTNode **)realloc(block->blockStmt.statements,
-                sizeof(ASTNode *) * (size_t)block->blockStmt.cap);
+                            sizeof(ASTNode *) * (size_t)block->blockStmt.cap);
   }
 
   block->blockStmt.statements[block->blockStmt.count++] = stmt;
@@ -144,7 +144,8 @@ ASTNode *create_param_list_node(ASTNode **params, int count) {
 
 ASTNode *append_param_list(ASTNode *existing, ASTNode *new_param) {
   int old_count = existing->functionCall.param_count;
-  ASTNode **new_list = (ASTNode **)malloc(sizeof(ASTNode *) * ((size_t)old_count + 1));
+  ASTNode **new_list =
+      (ASTNode **)malloc(sizeof(ASTNode *) * ((size_t)old_count + 1));
   for (int i = 0; i < old_count; i++) {
     new_list[i] = existing->functionCall.params[i];
   }
