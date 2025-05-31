@@ -18,7 +18,7 @@
 %union {
     int intval;
     double floatval;
-    char* strval;
+    const char* strval;
     char charval;
     int boolval;
     struct ASTNode* node;

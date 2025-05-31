@@ -83,7 +83,7 @@ StringLiteral   \"(\\.|[^\\"])*\"
 "False"         { yycolumn += yyleng; yylval.boolval = 0; return BoolLit; }
 
 {CharLiteral}   { yycolumn += yyleng; yylval.charval = yytext[1]; return CharLit; }
-{StringLiteral} { size_t len; yycolumn += yyleng; len = (size_t)yyleng - 2; yylval.strval = (char *)malloc(len + 1); if (!yylval.strval) { fprintf(stderr, "Error: Memory allocation failed for string literal\n"); exit(EXIT_FAILURE); } memcpy(yylval.strval, yytext + 1, len); yylval.strval[len] = '\0'; return StringLit; }
+{StringLiteral} { yycolumn += yyleng; yylval.strval = strdup(yytext); return StringLit; }
 {IntLiteral}    { yycolumn += yyleng; yylval.intval = atoi(yytext); return IntLit; }
 {FloatLiteral}  { yycolumn += yyleng; yylval.floatval = strtof(yytext, NULL); return FloatLit; }
 {Identifier}    { yycolumn += yyleng; yylval.strval = strdup(yytext); return Ident; }

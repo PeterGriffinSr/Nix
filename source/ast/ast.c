@@ -1,6 +1,3 @@
-#if defined(_WIN32) || defined(_WIN64)
-#define strdup _strdup
-#endif
 #include "ast.h"
 #include <stdarg.h>
 #include <stddef.h>
@@ -29,7 +26,7 @@ ASTNode *create_char_node(char value) {
   return node;
 }
 
-ASTNode *create_string_node(char *value) {
+ASTNode *create_string_node(const char *value) {
   ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeStringLiteral;
   node->u.strval = value;
@@ -43,7 +40,7 @@ ASTNode *create_bool_node(int value) {
   return node;
 }
 
-ASTNode *create_identifier_node(char *value) {
+ASTNode *create_identifier_node(const char *value) {
   ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeIdent;
   node->u.strval = value;
@@ -89,7 +86,7 @@ ASTNode *create_binary_node(const char *op, ASTNode *left, ASTNode *right) {
   return node;
 }
 
-ASTNode *create_var_node(char *name, ASTNode *value) {
+ASTNode *create_var_node(const char *name, ASTNode *value) {
   ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeVarDecl;
   node->varDecl.name = name;
@@ -107,11 +104,11 @@ ASTNode *create_type_call_node(const char *type_name, ASTNode **args,
   return node;
 }
 
-ASTNode *create_function_node(char *name, ASTNode *param_list_node,
+ASTNode *create_function_node(const char *name, ASTNode *param_list_node,
                               ASTNode *return_type, ASTNode *body) {
   ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeFunction;
-  node->functionCall.name = strdup(name);
+  node->functionCall.name = name;
   node->functionCall.param_count = param_list_node->functionCall.param_count;
   node->functionCall.params = param_list_node->functionCall.params;
   node->functionCall.return_type = return_type;
@@ -122,15 +119,15 @@ ASTNode *create_function_node(char *name, ASTNode *param_list_node,
 ASTNode *create_type_node(const char *type_name) {
   ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = _NodeType;
-  node->_type.type_name = strdup(type_name);
+  node->_type.type_name = type_name;
   return node;
 }
 
-ASTNode *create_use_node(char *module, char *name) {
+ASTNode *create_use_node(const char *module, const char *name) {
   ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeUse;
-  node->Use.module = strdup(module);
-  node->Use.name = strdup(name);
+  node->Use.module = module;
+  node->Use.name = name;
   return node;
 }
 
@@ -166,10 +163,10 @@ ASTNode *create_if_node(ASTNode *condition, ASTNode *then_branch,
   return node;
 }
 
-ASTNode *create_mod_node(char *name, ASTNode *body) {
+ASTNode *create_mod_node(const char *name, ASTNode *body) {
   ASTNode *node = (ASTNode *)malloc(sizeof(ASTNode));
   node->type = NodeMod;
-  node->Mod.name = strdup(name);
+  node->Mod.name = name;
   node->Mod.body = body;
   return node;
 }
@@ -282,10 +279,10 @@ void freeAST(ASTNode *node) {
   case NodeCharLiteral:
     break;
   case NodeStringLiteral:
-    free(node->u.strval);
+    free((char *)node->u.strval);
     break;
   case NodeIdent:
-    free(node->u.strval);
+    free((char *)node->u.strval);
     break;
   case NodeBlock:
     for (int i = 0; i < node->blockStmt.count; ++i) {
@@ -298,7 +295,7 @@ void freeAST(ASTNode *node) {
     freeAST(node->binaryExpr.right);
     break;
   case NodeVarDecl:
-    free(node->varDecl.name);
+    free((char *)node->varDecl.name);
     freeAST(node->varDecl.value);
     break;
   case NodeTypeCall:
@@ -308,7 +305,6 @@ void freeAST(ASTNode *node) {
     free(node->typeCall.args);
     break;
   case NodeFunction:
-    free(node->functionCall.name);
     for (int i = 0; i < node->functionCall.param_count; ++i) {
       freeAST(node->functionCall.params[i]);
     }
@@ -317,7 +313,6 @@ void freeAST(ASTNode *node) {
     freeAST(node->functionCall.body);
     break;
   case _NodeType:
-    free((char *)node->_type.type_name);
     break;
   case NodeIf:
     freeAST(node->If.condition);
